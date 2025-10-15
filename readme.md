@@ -187,6 +187,7 @@ users = [
     {"name": "Jane Smith", "birthday": "1990.01.27"}
 ]
 
+
 Використання функції get_upcoming_birthdays:
 
 upcoming_birthdays = get_upcoming_birthdays(users)
