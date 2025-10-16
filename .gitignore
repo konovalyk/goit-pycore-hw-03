@@ -1,0 +1,9 @@
+# Ignore VS Code settings
+.vscode/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+# Virtual environment
+.venv/
+# MacOS system files
+.DS_Store
