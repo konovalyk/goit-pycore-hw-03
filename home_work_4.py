@@ -126,23 +126,34 @@ def get_upcoming_birthdays(users):
 
     for user in users:
         try:
-            birth_date = datetime.strptime(user['birthday'], '%Y-%m-%d').date()
+            # Accept both 'YYYY-MM-DD' and 'YYYY.MM.DD' formats
+            bday_str = user['birthday'].replace('.', '-')
+            birth_date = datetime.strptime(bday_str, '%Y-%m-%d').date()
             this_year_birthday = birth_date.replace(year=today.year)
 
-            if 0 <= (this_year_birthday - today).days < 7:
+            # If birthday has already occurred this year, skip this user
+            if this_year_birthday < today:
+                continue
+            # Calculate the difference in days
+            delta_days = (this_year_birthday - today).days
+            if 0 <= delta_days <= 7:
                 celebration_date = this_year_birthday
                 if celebration_date.weekday() in (5, 6):  # Saturday or Sunday
                     celebration_date += timedelta(days=(7 - celebration_date.weekday()))
-                upcoming.append({"name": user['name'], "celebration_date": celebration_date.strftime('%Y-%m-%d')})
+                # Output date in 'YYYY.MM.DD' format
+                upcoming.append({"name": user['name'], "celebration_date": celebration_date.strftime('%Y.%m.%d')})
         except ValueError:
             continue
     return upcoming
 # Example usage:
 users = [
-    {"name": "John Doe", "birthday": "1985.10.25"},
+    {"name": "John Doe", "birthday": "1985.10.18"},
     {"name": "Jane Smith", "birthday": "1990.10.27"},
-    {"name": "Alice Johnson", "birthday": "1992-10-30"},
-    {"name": "Bob Brown", "birthday": "1988-11-01"},
-    {"name": "Charlie Davis", "birthday": "1995-11-03"},
+    {"name": "Alice Johnson", "birthday": "1992.10.30"},
+    {"name": "Bob Brown", "birthday": "1988.09.01"},
+    {"name": "Charlie Davis", "birthday": "1995.11.03"},
 ]
 
+print("Upcoming birthdays within the next 7 days:")
+for celebration in get_upcoming_birthdays(users):
+    print(f"{celebration['name']}: {celebration['celebration_date']}")
